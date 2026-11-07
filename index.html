@@ -302,9 +302,10 @@ html.ba-on::view-transition-group(ba-ui){animation:none}
 .ep-row{display:flex;gap:8px;height:min(560px,64vh)}
 .ep-row+.ep-row{margin-top:-24px}
 .ep-group .ep-row+.ep-row{margin-top:-4px}
-.ep{position:relative;flex:1 1 0;min-width:0;padding:0;border:0;overflow:hidden;background:var(--well);cursor:zoom-in;transition:flex-grow .6s cubic-bezier(.22,1,.36,1)}
-.ep img{display:block;width:100%;height:100%;object-fit:cover}
-.ep:hover,.ep:focus-visible,.ep.is-open{flex-grow:4}
+.ep{position:relative;flex:1 1 0;min-width:0;padding:0;border:0;overflow:hidden;background:var(--well);cursor:zoom-in;transition:flex-grow .6s cubic-bezier(.22,1,.36,1),flex-basis .6s cubic-bezier(.22,1,.36,1)}
+.ep img{display:block;width:100%;height:100%;object-fit:cover;object-position:var(--ep-pos,50% 50%)}
+.ep:hover,.ep:focus-visible,.ep.is-open{flex-grow:var(--ep-grow,4);flex-basis:var(--ep-w,0px)}
+.ep.ep-fit:hover img,.ep.ep-fit:focus-visible img,.ep.ep-fit.is-open img{object-fit:contain;object-position:50% 50%}
 .ep-cap{position:absolute;left:10px;bottom:10px;max-width:calc(100% - 20px);padding:5px 9px;border-radius:4px;background:var(--invert-bg);color:var(--invert-ink);font:500 12px/1.4 var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;transition:opacity .15s linear;pointer-events:none}
 .ep:hover .ep-cap,.ep:focus-visible .ep-cap,.ep.is-open .ep-cap{opacity:1;transition:opacity .3s linear .4s}
 @media (max-width:560px){.ep-list{padding:16px;gap:24px}.ep-row{gap:4px;height:min(420px,56vh)}.ep-row+.ep-row{margin-top:-20px}.ep-group .ep-row+.ep-row{margin-top:-8px}.ep-cap{left:6px;bottom:6px;max-width:calc(100% - 12px);padding:3px 6px;font-size:11px}}
@@ -764,7 +765,7 @@ document.querySelectorAll('[data-cat]').forEach(grid=>{
 /* 相簿 */
 const gal=document.getElementById('gallery');
 function buildAlbum(w,body){
-  const perRow=innerWidth>900?6:innerWidth>560?4:3;
+  const perRow=innerWidth>900?8:innerWidth>560?4:3;
   const rows=list=>{const n=Math.ceil(list.length/perRow),out=[];let k=0;for(let r=0;r<n;r++){const c=Math.ceil((list.length-k)/(n-r));out.push(list.slice(k,k+c));k+=c}return out};
   const panel=(src,label)=>`<button type="button" class="ep" aria-label="放大 ${esc(label)}"><img src="${src}" alt="${esc(label)}" loading="lazy"><span class="ep-cap">${esc(label)}</span></button>`;
   const block=(photos,name)=>rows(photos.map((src,i)=>panel(src,name+' '+String(i+1).padStart(2,'0')))).map(r=>`<div class="ep-row">${r.join('')}</div>`).join('');
@@ -778,6 +779,7 @@ function openGallery(w){
   buildAlbum(w,body);
   gal.showModal();
   gal.scrollTop=0;
+  body.querySelectorAll('.ep').forEach(sizePanel);
 }
 document.getElementById('galleryClose').addEventListener('click',()=>gal.close());
 gal.addEventListener('click',e=>{if(e.target===gal)gal.close();});
@@ -811,6 +813,23 @@ function openLightbox(im){
   lb.addEventListener('wheel',e=>e.preventDefault(),{passive:false});
   lb.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
 }
+/* 收合時窄條的中心：人臉或主要對焦點（照片寬高的比例位置） */
+const EP_FOCUS={"events/cofit-11th-01.jpg":[0.877,0.23],"events/cofit-11th-02.jpg":[0.339,0.338],"events/cofit-11th-03.jpg":[0.487,0.371],"events/cofit-11th-04.jpg":[0.443,0.339],"events/cofit-11th-05.jpg":[0.716,0.295],"events/cofit-11th-06.jpg":[0.444,0.44],"events/cofit-11th-07.jpg":[0.388,0.421],"events/cofit-11th-08.jpg":[0.323,0.214],"events/cofit-11th-09.jpg":[0.29,0.354],"events/cofit-11th-10.jpg":[0.449,0.412],"events/cofit-11th-11.jpg":[0.478,0.392],"events/cofit-11th-12.jpg":[0.504,0.326],"events/cofit-11th-13.jpg":[0.28,0.346],"events/cofit-11th-14.jpg":[0.766,0.274],"events/cofit-11th-15.jpg":[0.472,0.368],"events/cofit-11th-16.jpg":[0.803,0.367],"events/cofit-11th-17.jpg":[0.545,0.375],"events/cofit-11th-18.jpg":[0.55,0.415],"events/dumpling-fest-01.jpg":[0.528,0.164],"events/dumpling-fest-02.jpg":[0.541,0.523],"events/dumpling-fest-03.jpg":[0.493,0.463],"events/dumpling-fest-04.jpg":[0.543,0.449],"events/dumpling-fest-05.jpg":[0.428,0.561],"events/dumpling-fest-06.jpg":[0.532,0.488],"fashion/01.jpg":[0.503,0.251],"fashion/02.jpg":[0.562,0.286],"fashion/03.jpg":[0.544,0.448],"fashion/04.jpg":[0.361,0.356],"fashion/05.jpg":[0.458,0.026],"fashion/06.jpg":[0.484,0.224],"fashion/07.jpg":[0.48,0.303],"fashion/08.jpg":[0.581,0.445],"portraits/01.jpg":[0.509,0.256],"portraits/02.jpg":[0.439,0.376],"portraits/03.jpg":[0.545,0.38],"portraits/04.jpg":[0.513,0.307],"portraits/05.jpg":[0.747,0.36],"portraits/06.jpg":[0.62,0.322],"portraits/07.jpg":[0.337,0.324],"portraits/08.jpg":[0.661,0.238],"portraits/09.jpg":[0.546,0.301],"products/collagen-01.jpg":[0.484,0.393],"products/collagen-02.jpg":[0.403,0.456],"products/collagen-03.jpg":[0.54,0.551],"products/collagen-04.jpg":[0.4,0.356],"products/hope-nuts-01.jpg":[0.475,0.515],"products/hope-nuts-02.jpg":[0.52,0.567],"products/hope-nuts-03.jpg":[0.522,0.574],"products/hope-nuts-04.jpg":[0.598,0.475],"products/hope-nuts-05.jpg":[0.552,0.494],"products/hyaluronate-01.jpg":[0.57,0.487],"products/hyaluronate-02.jpg":[0.416,0.412],"products/hyaluronate-03.jpg":[0.486,0.442],"products/oasis-01.jpg":[0.458,0.422],"products/oasis-02.jpg":[0.55,0.447],"products/oasis-03.jpg":[0.557,0.487],"products/oasis-04.jpg":[0.28,0.479],"products/oasis-05.jpg":[0.38,0.473],"products/vitamin-d3-01.jpg":[0.519,0.509],"products/vitamin-d3-02.jpg":[0.492,0.486],"products/vitamin-d3-03.jpg":[0.527,0.489],"products/vitamin-d3-04.jpg":[0.517,0.589]};
+/* 展開寬度＝列高 × 照片比例，放不下時改為完整顯示（contain） */
+function sizePanel(p){
+  const im=p.querySelector('img'),row=p.parentNode;
+  if(!im.naturalWidth||!row.clientHeight)return;
+  const gap=parseFloat(getComputedStyle(row).columnGap)||0,n=row.children.length,want=row.clientHeight*im.naturalWidth/im.naturalHeight,max=row.clientWidth-(n-1)*(32+gap),w=Math.min(want,max);
+  p.style.setProperty('--ep-w',w+'px');p.style.setProperty('--ep-grow','0');
+  p.classList.toggle('ep-fit',want>max+1);
+  const f=EP_FOCUS[(im.getAttribute('src')||'').replace('images/photos/','')];
+  if(f){
+    const b=(row.clientWidth-(n-1)*gap)/n,h=row.clientHeight,c=Math.max(b/im.naturalWidth,h/im.naturalHeight),iw=im.naturalWidth*c,ih=im.naturalHeight*c,pos=(foc,img,box)=>img-box<1?50:Math.min(100,Math.max(0,(foc*img-box/2)/(img-box)*100));
+    p.style.setProperty('--ep-pos',pos(f[0],iw,b)+'% '+pos(f[1],ih,h)+'%');
+  }
+}
+document.getElementById('galleryBody').addEventListener('load',e=>{const p=e.target.closest&&e.target.closest('.ep');if(p)sizePanel(p)},true);
+addEventListener('resize',()=>{if(gal.open)gal.querySelectorAll('.ep').forEach(sizePanel)});
 document.getElementById('galleryBody').addEventListener('click',e=>{
   const p=e.target.closest('.ep');
   if(!p)return;
