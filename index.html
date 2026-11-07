@@ -185,13 +185,8 @@ a.card:hover .go{color:var(--ink);text-decoration:underline}
 @media (max-width:900px){.grid.photo .card.series~.card:last-child:nth-child(even){grid-column:1/-1}.grid.photo .card.series~.card:last-child:nth-child(even) .thumb{aspect-ratio:16/10}}
 @media (max-width:560px){.grid.photo{gap:14px}.grid.photo .meta{padding:12px}.grid.photo .meta h3{font-size:15px}.grid.photo .meta p{font-size:12px}}
 .g-year{margin-left:10px;font-family:var(--mono);font-size:13px;font-weight:500;color:var(--muted)}
-/* Focus Dim Siblings：作品分類列（僅滑鼠裝置、未要求減少動態時啟用） */
-@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  .jump a{transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .45s cubic-bezier(.22,1,.36,1),filter .45s cubic-bezier(.22,1,.36,1)}
-  .jump strong{transition:color .45s cubic-bezier(.22,1,.36,1)}
-  .jump a:is(:hover,:focus-visible){transform:translateY(-4px) scale(1.04)}
-  .jump:has(a:is(:hover,:focus-visible)) a:not(:hover,:focus-visible){opacity:.45;filter:blur(1px) saturate(.6);transform:scale(.95)}
-}
+/* 動態節奏：回饋 0.2–0.3 秒、展示 0.5–0.6 秒，同一條減速曲線 */
+@media (prefers-reduced-motion:no-preference){.jump strong{transition:color .25s cubic-bezier(.22,1,.36,1)}}
 /* Before / After 色調切換：點「深色／淺色」後以分界線比較兩種色調 */
 .ba-ui{display:none}
 html.ba-on{cursor:ew-resize;touch-action:pan-y}
@@ -212,17 +207,15 @@ html.ba-on::view-transition-group(ba-ui){animation:none}
 .vp-play{position:absolute;top:50%;left:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:var(--invert-bg);color:var(--invert-ink);display:flex;align-items:center;justify-content:center}
 .tall .vp-play{width:44px;height:44px;margin:-22px 0 0 -22px}
 .vp-dur{position:absolute;right:10px;bottom:10px;padding:3px 7px;border-radius:4px;background:var(--invert-bg);color:var(--invert-ink);font:500 12px/1.4 var(--mono)}
-.vp-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left}
+.vp-bar{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left}
 @media (hover:hover) and (pointer:fine){
-  .grid:not(.photo) .thumb img{filter:brightness(.72);transition:filter .4s cubic-bezier(.22,1,.36,1)}
-  .vp-play{transition:transform .35s cubic-bezier(.22,1,.36,1),opacity .35s cubic-bezier(.22,1,.36,1)}
-  .grid:not(.photo) .card:is(:hover,:focus-visible,:has(:focus-visible)) .thumb img{filter:none}
+  .vp-play{transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .3s cubic-bezier(.22,1,.36,1)}
   .grid:not(.photo) .card:is(:hover,:focus-visible,:has(:focus-visible)) .vp-play{transform:scale(.6);opacity:0}
 }
 @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  .grid:not(.photo) .thumb img{transition:filter .4s cubic-bezier(.22,1,.36,1),transform .4s cubic-bezier(.22,1,.36,1)}
+  .grid:not(.photo) .thumb img{transition:transform .3s cubic-bezier(.22,1,.36,1)}
   .vp-bar{transition:transform .3s cubic-bezier(.22,1,.36,1)}
-  .grid:not(.photo) .card:is(:hover,:focus-visible,:has(:focus-visible)) .thumb img{transform:scale(1.1);transition:filter .4s cubic-bezier(.22,1,.36,1),transform 10s linear}
+  .grid:not(.photo) .card:is(:hover,:focus-visible,:has(:focus-visible)) .thumb img{transform:scale(1.1);transition:transform 10s linear}
 }
 /* Timeline Draw：資歷（GSAP 未載入或要求減少動態時，顯示完整靜態時間軸） */
 .tl{position:relative;padding-left:28px}
@@ -250,18 +243,12 @@ html.ba-on::view-transition-group(ba-ui){animation:none}
 /* 作品分頁：01–06 一次只顯示一類（JS 未執行時全部顯示） */
 .sec[hidden]{display:none}
 .jump a[aria-current="true"] strong{color:var(--accent)}
-.jump a[aria-current="true"]{box-shadow:inset 0 -3px 0 var(--accent)}
+.jump a[aria-current="true"]{box-shadow:inset 0 -2px 0 var(--accent)}
 @media (max-width:900px){.jump a[aria-current="true"]{box-shadow:none;border-color:var(--accent)}}
 @media (prefers-reduced-motion:no-preference){
-  @keyframes sec-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-  .sec.is-in{animation:sec-in .35s cubic-bezier(.22,1,.36,1)}
+  @keyframes sec-in{from{opacity:0}to{opacity:1}}
+  .sec.is-in{animation:sec-in .2s cubic-bezier(.22,1,.36,1)}
 }
-/* 看片按鈕單次小波紋（僅滑鼠裝置、未要求減少動態時啟用） */
-@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  .go-ring{position:relative}
-  .go-ring:hover::after{content:"";position:absolute;right:.5em;top:50%;width:44px;height:44px;margin:-22px -22px 0 0;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;opacity:0;animation:go-ring .7s cubic-bezier(.22,1,.36,1)}
-}
-@keyframes go-ring{from{transform:scale(.2);opacity:.9}to{transform:scale(1);opacity:0}}
 /* 手機與平板：分類按鈕用短標題，等寬三欄排成兩行 */
 .tab-short{display:none}
 @media (max-width:900px){
@@ -272,14 +259,12 @@ html.ba-on::view-transition-group(ba-ui){animation:none}
 }
 /* 手機觸控：捲到中央喚醒影片封面、按下回饋（未要求減少動態時啟用） */
 @media (hover:none) and (pointer:coarse) and (prefers-reduced-motion:no-preference){
-  .grid:not(.photo) .thumb img{filter:brightness(.72);transition:filter .4s cubic-bezier(.22,1,.36,1),transform .4s cubic-bezier(.22,1,.36,1)}
-  .vp-play{transition:transform .35s cubic-bezier(.22,1,.36,1),opacity .35s cubic-bezier(.22,1,.36,1)}
-  .card.vp-awake .thumb img{filter:none;transform:scale(1.1);transition:filter .4s cubic-bezier(.22,1,.36,1),transform 10s linear}
+  .grid:not(.photo) .thumb img{transition:transform .3s cubic-bezier(.22,1,.36,1)}
+  .vp-play{transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .3s cubic-bezier(.22,1,.36,1)}
+  .card.vp-awake .thumb img{transform:scale(1.1);transition:transform 10s linear}
   .card.vp-awake .vp-play{transform:scale(.6);opacity:0}
-  .card,.jump a{transition:transform .15s cubic-bezier(.22,1,.36,1);-webkit-tap-highlight-color:transparent}
+  .card,.jump a{transition:transform .2s cubic-bezier(.22,1,.36,1);-webkit-tap-highlight-color:transparent}
   .card:active,.jump a:active{transform:scale(.98)}
-  .go-ring{position:relative}
-  .go-ring.go-tap::after{content:"";position:absolute;right:.5em;top:50%;width:44px;height:44px;margin:-22px -22px 0 0;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;opacity:0;animation:go-ring .7s cubic-bezier(.22,1,.36,1)}
 }
 /* Lightbox Zoom：相簿內點圖放大（GSAP 未載入或要求減少動態時直接顯示，不做補間） */
 .lb{position:fixed;inset:0;z-index:2;background:rgba(0,0,0,.82);cursor:zoom-out}
@@ -357,6 +342,7 @@ html.ba-on::view-transition-group(ba-ui){animation:none}
     <h2>資源有限，<br>畫面不打折。</h2>
     <p>營養系畢業，讓我在拍攝醫師、營養師的衛教內容時，能先聽懂專業，再把它拍得好懂。</p>
     <p>在精簡的預算、人力與時程裡，我能夠一手包辦企劃、拍攝到剪輯，讓有限的資源也能呈現最好的畫面。服飾人物與商品情境的平面拍攝也能一併完成。</p>
+    <p>目前也與 AI 協作，開發剪輯插件與動態素材庫，並把字卡、字幕等重複的製作流程整理成可以一再使用的工作流。</p>
     <a class="btn" href="#contact">聯絡我</a>
   </div>
 </div></section>
@@ -377,6 +363,7 @@ html.ba-on::view-transition-group(ba-ui){animation:none}
     <div class="tools">
       <h2>技能與器材</h2>
       <div><h3>軟體</h3><ul><li>Premiere</li><li>EDIUS</li><li>After Effects</li><li>DaVinci Resolve</li><li>Photoshop</li></ul></div>
+      <div><h3>AI 協作</h3><ul><li>Premiere 粗剪插件</li><li>動態素材庫</li></ul></div>
       <div><h3>直播</h3><ul><li>OBS</li></ul></div>
       <div><h3>器材</h3><ul><li>Sony</li><li>Canon</li><li>DJI</li><li>Insta360</li></ul></div>
     </div>
@@ -853,7 +840,8 @@ let saved=null;try{saved=localStorage.getItem('kk-theme')}catch(e){}
 setTheme(saved==='dark'?'dark':'light');
 /* 預覽短片：連結網址 → MP4 路徑。有短片的作品優先播短片，其次 YouTube 嵌入，都沒有則維持推鏡。 */
 const VP_CLIPS={};
-const VP_LIVE=matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)').matches,VP_EMBED_BAR=20;
+const VP_LIVE=matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)').matches,VP_EMBED_BAR=20,VP_MIN_HOLD=500,VP_NO_EMBED=new Set();
+if(VP_LIVE)['https://www.youtube-nocookie.com','https://www.youtube.com','https://i.ytimg.com','https://www.google.com'].forEach(h=>{const l=document.createElement('link');l.rel='preconnect';l.href=h;l.crossOrigin='';document.head.appendChild(l)});
 const VP_SECONDS={l7OkWp7gkdg:194,DGaYqs0OodM:62,EIJITgk54y8:258,'Esf7Bqri-F0':66,JYLGfhHNP1o:105,M9DLw0jM8jQ:1369,SWEz4KkMu_M:85,cPHbgHZSVIs:866,fJ2iEsoKHEU:222,'g0W525C-gIA':210,hPFm3MhnbkM:319,'vM7mU-MGr5s':732,pCucQr6pGTw:37};
 document.querySelectorAll('.grid:not(.photo) .card').forEach(c=>{
   const th=c.querySelector('.thumb');
@@ -871,8 +859,9 @@ document.querySelectorAll('.grid:not(.photo) .card').forEach(c=>{
   const start=()=>{
     if(media||timer)return;
     const clip=VP_CLIPS[href];
-    if(!clip&&!yt)return;
+    if(!clip&&(!yt||VP_NO_EMBED.has(yt)))return;
     c.classList.add('vp-live');
+    const t0=performance.now();
     timer=setTimeout(()=>{
       timer=0;
       if(clip){
@@ -882,15 +871,37 @@ document.querySelectorAll('.grid:not(.photo) .card').forEach(c=>{
         media=v;th.insertBefore(v,ui);v.play().catch(()=>{});
       }else{
         const f=document.createElement('iframe');f.className='vp-media';f.tabIndex=-1;f.title='';f.setAttribute('aria-hidden','true');f.allow='autoplay; encrypted-media';f.referrerPolicy='strict-origin-when-cross-origin';
-        f.src='https://www.youtube-nocookie.com/embed/'+yt+'?autoplay=1&mute=1&controls=0&playsinline=1&rel=0&loop=1&playlist='+yt;
-        f.addEventListener('load',()=>setTimeout(()=>{if(media!==f)return;show();bar.style.transition='transform '+VP_EMBED_BAR+'s linear';bar.style.transform='scaleX(1)'},800));
+        f.src='https://www.youtube-nocookie.com/embed/'+yt+'?autoplay=1&mute=1&controls=0&playsinline=1&rel=0&loop=1&playlist='+yt+'&enablejsapi=1&origin='+encodeURIComponent(location.origin);
+        let shown=false,ping=0,fallback=0;
+        const reveal=()=>{
+          if(shown||media!==f)return;
+          const wait=VP_MIN_HOLD-(performance.now()-t0);
+          if(wait>0){setTimeout(reveal,wait);return}
+          shown=true;clearInterval(ping);clearTimeout(fallback);removeEventListener('message',onMsg);
+          show();bar.style.transition='transform '+VP_EMBED_BAR+'s linear';bar.style.transform='scaleX(1)';
+        };
+        const onMsg=e=>{
+          if(e.source!==f.contentWindow)return;
+          let d=e.data;try{if(typeof d==='string')d=JSON.parse(d)}catch(err){return}
+          if(d&&d.event==='onError'){VP_NO_EMBED.add(yt);fail();return}
+          const st=d&&(d.event==='onStateChange'?d.info:d.info&&d.info.playerState);
+          if(st===1)reveal();
+        };
+        const fail=()=>{if(media!==f)return;f.vpStop();f.remove();media=null;c.classList.remove('vp-live')};
+        addEventListener('message',onMsg);
+        f.addEventListener('load',()=>{
+          const hello=()=>{try{f.contentWindow.postMessage(JSON.stringify({event:'listening',id:yt,channel:'widget'}),'*')}catch(err){}};
+          hello();ping=setInterval(hello,250);
+          fallback=setTimeout(fail,4000);
+        });
+        f.vpStop=()=>{clearInterval(ping);clearTimeout(fallback);removeEventListener('message',onMsg)};
         media=f;th.insertBefore(f,ui);
       }
-    },clip?0:250);
+    },0);
   };
   const stop=()=>{
     clearTimeout(timer);timer=0;
-    if(media){if(media.pause){media.pause();media.currentTime=0}media.remove();media=null}
+    if(media){if(media.vpStop)media.vpStop();if(media.pause){media.pause();media.currentTime=0}media.remove();media=null}
     c.classList.remove('vp-live');bar.style.transition='';bar.style.transform='';
   };
   c.addEventListener('pointerenter',start);c.addEventListener('pointerleave',stop);
@@ -933,17 +944,10 @@ if(!matchMedia('(prefers-reduced-motion:reduce)').matches){
     initTimeline();
   });
 }
-document.querySelectorAll('.go:not(.muted)').forEach(g=>{if(/看片|看相簿/.test(g.textContent))g.classList.add('go-ring')});
 if(matchMedia('(hover:none) and (pointer:coarse) and (prefers-reduced-motion:no-preference)').matches){
   const wake=new IntersectionObserver(es=>es.forEach(e=>e.target.closest('.card').classList.toggle('vp-awake',e.isIntersecting)),{rootMargin:'-35% 0px -35% 0px'});
   document.querySelectorAll('.grid:not(.photo) .card .thumb').forEach(t=>{if(t.querySelector('img'))wake.observe(t)});
   document.addEventListener('touchstart',()=>{},{passive:true});
-  document.addEventListener('click',e=>{
-    const c=e.target.closest('.card'),g=e.target.closest('.go-ring')||(c&&c.querySelector('.go-ring'));
-    if(!g)return;
-    g.classList.remove('go-tap');void g.offsetWidth;g.classList.add('go-tap');
-  });
-  document.addEventListener('animationend',e=>{if(e.animationName==='go-ring')e.target.classList.remove('go-tap')});
 }
 const tabLinks=[...document.querySelectorAll('.jump a')],tabIds=tabLinks.map(a=>a.getAttribute('href').slice(1));
 function showTab(id,animate){
@@ -968,7 +972,7 @@ if(tabIds.includes(location.hash.slice(1)))addEventListener('load',()=>requestAn
 let baBusy=false;
 function compareTheme(cur,next){
   baBusy=true;
-  const SWEEP=1400;
+  const SWEEP=800;
   let mode='intro',t0=0,raf=0,p=100,from=100,to=0,settled=false;
   const put=v=>{p=Math.min(100,Math.max(0,v));root.style.setProperty('--ba-p',p+'%')};
   const ease=x=>1-Math.pow(1-x,3);
