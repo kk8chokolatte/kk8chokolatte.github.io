@@ -194,13 +194,119 @@ a.card:hover .go{color:var(--ink);text-decoration:underline}
 @media (max-width:900px){.grid.photo .card.series~.card:last-child:nth-child(even){grid-column:1/-1}.grid.photo .card.series~.card:last-child:nth-child(even) .thumb{aspect-ratio:16/10}}
 @media (max-width:560px){.grid.photo{gap:14px}.grid.photo .meta{padding:12px}.grid.photo .meta h3{font-size:15px}.grid.photo .meta p{font-size:12px}}
 .g-year{margin-left:10px;font-family:var(--mono);font-size:13px;font-weight:500;color:var(--muted)}
+/* Focus Dim Siblings：作品分類列（僅滑鼠裝置、未要求減少動態時啟用） */
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .jump a{transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .45s cubic-bezier(.22,1,.36,1),filter .45s cubic-bezier(.22,1,.36,1)}
+  .jump strong{transition:color .45s cubic-bezier(.22,1,.36,1)}
+  .jump a:is(:hover,:focus-visible){transform:translateY(-4px) scale(1.04)}
+  .jump:has(a:is(:hover,:focus-visible)) a:not(:hover,:focus-visible){opacity:.45;filter:blur(1px) saturate(.6);transform:scale(.95)}
+}
+/* Before / After 色調切換：點「深色／淺色」後以分界線比較兩種色調 */
+.ba-ui{display:none}
+html.ba-on{cursor:ew-resize;touch-action:pan-y}
+html.ba-on .ba-ui{display:block;position:fixed;inset:0;z-index:50;pointer-events:none;view-transition-name:ba-ui}
+@keyframes ba-hold{from{opacity:1}to{opacity:1}}
+html.ba-on::view-transition-old(root),html.ba-on::view-transition-new(root),html.ba-on::view-transition-new(ba-ui){animation:ba-hold 3600s linear;mix-blend-mode:normal;opacity:1}
+html.ba-on::view-transition-new(root){clip-path:inset(0 0 0 var(--ba-p,100%))}
+html.ba-on::view-transition-group(ba-ui){animation:none}
+.ba-line{position:absolute;top:0;bottom:0;left:var(--ba-p,100%);width:2px;margin-left:-1px;background:var(--accent)}
+.ba-knob{position:absolute;top:50%;left:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center}
+.ba-tag{position:absolute;background:var(--invert-bg);color:var(--invert-ink);border-radius:4px;padding:6px 10px}
+.ba-tag{top:84px;font:500 12px var(--mono);letter-spacing:.08em}
+.ba-tag.l{left:var(--pad)}.ba-tag.r{right:var(--pad)}
+/* Tilt Parallax：平面作品（僅滑鼠裝置、未要求減少動態時由 GSAP 啟用） */
+.grid.photo .card{position:relative}
+.grid.photo .thumb{z-index:1}
+.tilt-sheen{position:absolute;inset:-8%;pointer-events:none;opacity:0;background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.34),transparent 55%);transition:opacity .45s cubic-bezier(.22,1,.36,1)}
+.thumb.is-tilt .tilt-sheen{opacity:1}
+/* Hover to Play：影片作品（目前以緩慢推鏡示意播放；手機只顯示播放鍵與片長） */
+.vp-ui{position:absolute;inset:0;pointer-events:none}
+.vp-media{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover;opacity:0;transition:opacity .4s cubic-bezier(.22,1,.36,1);pointer-events:none}
+.vp-media.on{opacity:1}
+.vp-play{position:absolute;top:50%;left:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:var(--invert-bg);color:var(--invert-ink);display:flex;align-items:center;justify-content:center}
+.tall .vp-play{width:44px;height:44px;margin:-22px 0 0 -22px}
+.vp-dur{position:absolute;right:10px;bottom:10px;padding:3px 7px;border-radius:4px;background:var(--invert-bg);color:var(--invert-ink);font:500 12px/1.4 var(--mono)}
+.vp-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left}
+@media (hover:hover) and (pointer:fine){
+  .grid:not(.photo) .thumb img{filter:brightness(.72);transition:filter .4s cubic-bezier(.22,1,.36,1)}
+  .vp-play{transition:transform .35s cubic-bezier(.22,1,.36,1),opacity .35s cubic-bezier(.22,1,.36,1)}
+  .grid:not(.photo) .card:is(:hover,:focus-visible,:has(:focus-visible)) .thumb img{filter:none}
+  .grid:not(.photo) .card:is(:hover,:focus-visible,:has(:focus-visible)) .vp-play{transform:scale(.6);opacity:0}
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .grid:not(.photo) .thumb img{transition:filter .4s cubic-bezier(.22,1,.36,1),transform .4s cubic-bezier(.22,1,.36,1)}
+  .vp-bar{transition:transform .3s cubic-bezier(.22,1,.36,1)}
+  .grid:not(.photo) .card:is(:hover,:focus-visible,:has(:focus-visible)) .thumb img{transform:scale(1.1);transition:filter .4s cubic-bezier(.22,1,.36,1),transform 10s linear}
+  .grid:not(.photo) .card:not(.vp-live):is(:hover,:focus-visible,:has(:focus-visible)) .vp-bar{transform:scaleX(1);transition:transform 10s linear}
+}
+/* Timeline Draw：資歷（GSAP 未載入或要求減少動態時，顯示完整靜態時間軸） */
+.tl{position:relative;padding-left:28px}
+.tl::before,.tl-line{content:"";position:absolute;left:4px;top:37px;bottom:0;width:1px;background:var(--line-strong)}
+.tl-line{width:2px;left:3.5px;background:var(--accent);transform-origin:top}
+.tl .job{position:relative}
+.tl-dot{position:absolute;left:-28px;top:33px;width:9px;height:9px;border-radius:50%;background:var(--accent)}
+/* Pulse Rings：標題的點（僅滑鼠裝置、未要求減少動態時啟用；定位依 Anton 字型句點的中心） */
+.pr{display:none}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .hero h1 .dot,.contact h2 .dot{position:relative;transition:color .25s cubic-bezier(.22,1,.36,1)}
+  .hero h1 .dot:has(.pr:hover),.contact h2 .dot:has(.pr:hover){color:transparent}
+  .pr{display:block;position:absolute;left:.1143em;top:1.102em;width:.36em;height:.36em;margin:-.18em 0 0 -.18em;border-radius:50%}
+  .pr b,.pr i{position:absolute;left:50%;top:50%;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .25s cubic-bezier(.22,1,.36,1)}
+  .pr b{width:.17em;height:.17em;margin:-.085em 0 0 -.085em;background:var(--accent);animation:pr-core 1.2s ease-in-out infinite}
+  .pr i{width:.75em;height:.75em;margin:-.375em 0 0 -.375em;border:2px solid var(--accent);animation:pr-ring 2.4s linear infinite}
+  .pr i:nth-of-type(2){animation-delay:-.6s}
+  .pr i:nth-of-type(3){animation-delay:-1.2s}
+  .pr i:nth-of-type(4){animation-delay:-1.8s}
+  .pr:hover b{opacity:1}
+  .pr:hover i{opacity:1}
+}
+@keyframes pr-core{50%{transform:scale(1.14)}}
+@keyframes pr-ring{from{transform:scale(.15);border-color:color-mix(in srgb,var(--accent) 90%,transparent)}to{transform:scale(1.25);border-color:transparent}}
+/* 作品分頁：01–06 一次只顯示一類（JS 未執行時全部顯示） */
+.sec[hidden]{display:none}
+.jump a[aria-current="true"] strong{color:var(--accent)}
+.jump a[aria-current="true"]{box-shadow:inset 0 -3px 0 var(--accent)}
+@media (max-width:900px){.jump a[aria-current="true"]{box-shadow:none;border-color:var(--accent)}}
+@media (prefers-reduced-motion:no-preference){
+  @keyframes sec-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .sec.is-in{animation:sec-in .35s cubic-bezier(.22,1,.36,1)}
+}
+/* 看片按鈕單次小波紋（僅滑鼠裝置、未要求減少動態時啟用） */
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .go-ring{position:relative}
+  .go-ring:hover::after{content:"";position:absolute;right:.5em;top:50%;width:44px;height:44px;margin:-22px -22px 0 0;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;opacity:0;animation:go-ring .7s cubic-bezier(.22,1,.36,1)}
+}
+@keyframes go-ring{from{transform:scale(.2);opacity:.9}to{transform:scale(1);opacity:0}}
+/* 手機與平板：分類按鈕用短標題，等寬三欄排成兩行 */
+.tab-short{display:none}
+@media (max-width:900px){
+  .jump{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .jump a,.jump a:first-child{justify-content:center;padding:10px 6px;min-width:0;white-space:nowrap}
+  .tab-long{display:none}
+  .tab-short{display:inline}
+}
+/* 手機觸控：捲到中央喚醒影片封面、按下回饋（未要求減少動態時啟用） */
+@media (hover:none) and (pointer:coarse) and (prefers-reduced-motion:no-preference){
+  .grid:not(.photo) .thumb img{filter:brightness(.72);transition:filter .4s cubic-bezier(.22,1,.36,1),transform .4s cubic-bezier(.22,1,.36,1)}
+  .vp-play{transition:transform .35s cubic-bezier(.22,1,.36,1),opacity .35s cubic-bezier(.22,1,.36,1)}
+  .vp-bar{transition:transform .3s cubic-bezier(.22,1,.36,1)}
+  .card.vp-awake .thumb img{filter:none;transform:scale(1.1);transition:filter .4s cubic-bezier(.22,1,.36,1),transform 10s linear}
+  .card.vp-awake .vp-play{transform:scale(.6);opacity:0}
+  .card.vp-awake .vp-bar{transform:scaleX(1);transition:transform 10s linear}
+  .card,.jump a{transition:transform .15s cubic-bezier(.22,1,.36,1);-webkit-tap-highlight-color:transparent}
+  .card:active,.jump a:active{transform:scale(.98)}
+  .rv{opacity:0;transform:translateY(16px)}
+  .rv.rv-in{opacity:1;transform:none;transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+  .go-ring{position:relative}
+  .go-ring.go-tap::after{content:"";position:absolute;right:.5em;top:50%;width:44px;height:44px;margin:-22px -22px 0 0;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;opacity:0;animation:go-ring .7s cubic-bezier(.22,1,.36,1)}
+}
 </style>
 </head>
 <body>
 <header class="top"><div class="wrap">
   <a class="brand" href="#top"><i class="rec" aria-hidden="true"></i><b>KELLY KO</b><span>柯盛惠</span></a>
   <nav class="nav" aria-label="主選單">
-    <a href="#interview">作品</a><a href="#about">關於</a><a href="#cv">資歷</a><a href="#contact">聯絡</a>
+    <a href="#works">作品</a><a href="#about">關於</a><a href="#cv">資歷</a><a href="#contact">聯絡</a>
     <button class="theme" id="themeBtn" type="button" aria-label="切換深色模式">深色</button>
   </nav>
 </div></header>
@@ -208,20 +314,20 @@ a.card:hover .go{color:var(--ink);text-decoration:underline}
 <main id="top" class="wrap">
   <section class="hero">
     <div class="tc">REC PORTFOLIO　TC <span id="tcYears" title="入行 9 年 2 個月">09:02:00:00</span></div>
-    <h1>Video<br>Director<span class="dot">.</span></h1>
+    <h1>Video<br>Director<span class="dot">.<span class="pr" aria-hidden="true"><b></b><i></i><i></i><i></i><i></i></span></span></h1>
     <div class="hero-foot">
       <p>企劃、拍攝、剪輯都能獨立完成，在有限的預算與人力裡懂得取捨，把每一分資源都花在畫面上。</p>
       <div class="facts"><div><span>現職</span><strong>Cofit 高級影音編導</strong></div><div><span>入行</span><strong>2017 年起</strong></div></div>
     </div>
   </section>
 
-  <nav class="jump" aria-label="作品分類">
+  <nav class="jump" id="works" aria-label="作品分類">
     <a href="#interview"><small>01</small><strong>訪談</strong></a>
-    <a href="#course"><small>02</small><strong>線上課程</strong></a>
-    <a href="#shorts"><small>03</small><strong>直式短影音</strong></a>
-    <a href="#food"><small>04</small><strong>料理與美食</strong></a>
-    <a href="#live"><small>05</small><strong>直播與活動</strong></a>
-    <a href="#photo"><small>06</small><strong>平面攝影</strong></a>
+    <a href="#course"><small>02</small><strong><span class="tab-long">線上課程</span><span class="tab-short">課程</span></strong></a>
+    <a href="#shorts"><small>03</small><strong><span class="tab-long">直式短影音</span><span class="tab-short">短影音</span></strong></a>
+    <a href="#food"><small>04</small><strong><span class="tab-long">料理與美食</span><span class="tab-short">料理</span></strong></a>
+    <a href="#live"><small>05</small><strong><span class="tab-long">直播與活動</span><span class="tab-short">直播</span></strong></a>
+    <a href="#photo"><small>06</small><strong><span class="tab-long">平面攝影</span><span class="tab-short">攝影</span></strong></a>
   </nav>
 
   <section class="sec" id="interview"><div class="sec-head"><h2><em>01</em>訪談</h2><p class="role">負責：拍攝、後製</p><span class="count" data-count="interview"></span></div><div class="grid" data-cat="interview"></div></section>
@@ -249,12 +355,14 @@ a.card:hover .go{color:var(--ink);text-decoration:underline}
   <section class="cv" id="cv">
     <div>
       <h2>資歷</h2>
-      <div class="job"><time>2025.01 – 迄今</time><div><h3>高級影音編導｜群健科技股份有限公司（Cofit）</h3><p>健康醫療衛教影音：拍攝、剪輯與後期調光；商品平面拍攝、活動紀錄拍攝，廣告素材延伸。</p></div></div>
-      <div class="job"><time>2023.06 – 2024.12</time><div><h3>攝影編導｜蓓莉洋行</h3><p>服飾／飾品商品攝影、社群影音製作、新品連線直播，官網後台與行銷活動設置。</p></div></div>
-      <div class="job"><time>2022.10 – 2023.06</time><div><h3>影音編導｜醫鼎科技股份有限公司（Heho）</h3><p>健康新聞、人物專訪、平面側拍；前期企劃到後期剪輯，每週健康週報影音轉直播串流。</p></div></div>
-      <div class="job"><time>2021.11 – 2022.07</time><div><h3>內容行銷編導｜聯邦網通科技股份有限公司</h3><p>yesgogogo 即食購 FB／YouTube 直播與影音：腳本企劃、導播到後期短影音推播。</p></div></div>
-      <div class="job"><time>2020.01 – 2021.11</time><div><h3>編導｜電電購（三立媒體集團）</h3><p>FB／YouTube 開箱影片，聯名商品廣告與平面拍攝，統籌廠商溝通。</p></div></div>
-      <div class="job"><time>2017.07 – 2019.11</time><div><h3>編導｜庫立馬媒體科技股份有限公司（料理123）</h3><p>料理教學與商業合作影片；節目規劃、腳本、拍攝，排程製播、審片、分派剪輯。</p></div></div>
+      <div class="tl"><span class="tl-line" aria-hidden="true"></span>
+      <div class="job"><span class="tl-dot" aria-hidden="true"></span><time>2025.01 – 迄今</time><div><h3>高級影音編導｜群健科技股份有限公司（Cofit）</h3><p>健康醫療衛教影音：拍攝、剪輯與後期調光；商品平面拍攝、活動紀錄拍攝，廣告素材延伸。</p></div></div>
+      <div class="job"><span class="tl-dot" aria-hidden="true"></span><time>2023.06 – 2024.12</time><div><h3>攝影編導｜蓓莉洋行</h3><p>服飾／飾品商品攝影、社群影音製作、新品連線直播，官網後台與行銷活動設置。</p></div></div>
+      <div class="job"><span class="tl-dot" aria-hidden="true"></span><time>2022.10 – 2023.06</time><div><h3>影音編導｜醫鼎科技股份有限公司（Heho）</h3><p>健康新聞、人物專訪、平面側拍；前期企劃到後期剪輯，每週健康週報影音轉直播串流。</p></div></div>
+      <div class="job"><span class="tl-dot" aria-hidden="true"></span><time>2021.11 – 2022.07</time><div><h3>內容行銷編導｜聯邦網通科技股份有限公司</h3><p>yesgogogo 即食購 FB／YouTube 直播與影音：腳本企劃、導播到後期短影音推播。</p></div></div>
+      <div class="job"><span class="tl-dot" aria-hidden="true"></span><time>2020.01 – 2021.11</time><div><h3>編導｜電電購（三立媒體集團）</h3><p>FB／YouTube 開箱影片，聯名商品廣告與平面拍攝，統籌廠商溝通。</p></div></div>
+      <div class="job"><span class="tl-dot" aria-hidden="true"></span><time>2017.07 – 2019.11</time><div><h3>編導｜庫立馬媒體科技股份有限公司（料理123）</h3><p>料理教學與商業合作影片；節目規劃、腳本、拍攝，排程製播、審片、分派剪輯。</p></div></div>
+      </div>
     </div>
     <div class="tools">
       <h2>技能與器材</h2>
@@ -265,7 +373,7 @@ a.card:hover .go{color:var(--ink);text-decoration:underline}
   </section>
 
   <footer class="contact" id="contact">
-    <h2>Let's roll<span class="dot">.</span></h2>
+    <h2>Let's roll<span class="dot">.<span class="pr" aria-hidden="true"><b></b><i></i><i></i><i></i><i></i></span></span></h2>
     <div class="ways">
       <div><span>Email</span><a href="mailto:kk8chkolatte@gmail.com">kk8chkolatte@gmail.com</a></div>
     </div>
@@ -277,6 +385,7 @@ a.card:hover .go{color:var(--ink);text-decoration:underline}
   <div class="g-head"><div><h2 id="galleryTitle"></h2><p id="gallerySub"></p></div><button type="button" class="g-close" id="galleryClose" aria-label="關閉相簿">✕</button></div>
   <div class="g-body" id="galleryBody"></div>
 </dialog>
+<div class="ba-ui" aria-hidden="true"><span class="ba-tag l">BEFORE</span><span class="ba-tag r">AFTER</span><div class="ba-line"><div class="ba-knob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg></div></div></div>
 <script>
 /* ===== 作品清單：在這裡補上連結（url 留空 = 顯示「連結待補」）===== */
 const WORKS = [
@@ -670,7 +779,204 @@ const root=document.documentElement, btn=document.getElementById('themeBtn');
 function setTheme(t){root.setAttribute('data-theme',t);btn.textContent=t==='light'?'深色':'淺色';btn.setAttribute('aria-label',t==='light'?'切換深色模式':'切換淺色模式');try{localStorage.setItem('kk-theme',t)}catch(e){}}
 let saved=null;try{saved=localStorage.getItem('kk-theme')}catch(e){}
 setTheme(saved==='dark'?'dark':'light');
-btn.addEventListener('click',()=>setTheme(root.getAttribute('data-theme')==='light'?'dark':'light'));
+/* 預覽短片：連結網址 → MP4 路徑。有短片的作品優先播短片，其次 YouTube 嵌入，都沒有則維持推鏡。 */
+const VP_CLIPS={};
+const VP_LIVE=matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)').matches,VP_EMBED_BAR=20;
+const VP_SECONDS={l7OkWp7gkdg:194,DGaYqs0OodM:62,EIJITgk54y8:258,'Esf7Bqri-F0':66,JYLGfhHNP1o:105,M9DLw0jM8jQ:1369,SWEz4KkMu_M:85,cPHbgHZSVIs:866,fJ2iEsoKHEU:222,'g0W525C-gIA':210,hPFm3MhnbkM:319,'vM7mU-MGr5s':732,pCucQr6pGTw:37};
+document.querySelectorAll('.grid:not(.photo) .card').forEach(c=>{
+  const th=c.querySelector('.thumb');
+  if(!th||!th.querySelector('img'))return;
+  const a=c.matches('a')?c:th,m=(a.getAttribute('href')||'').match(/(?:v=|youtu\.be\/|shorts\/)([\w-]{11})/),sec=m&&VP_SECONDS[m[1]],sub=c.querySelector('.meta p');
+  const hrs=sub&&!sec&&sub.textContent.match(/約\s*\d+\s*小時/);
+  const dur=sec?Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'):hrs?hrs[0]:'';
+  const ui=document.createElement('span');ui.className='vp-ui';ui.setAttribute('aria-hidden','true');
+  ui.innerHTML='<span class="vp-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>'+(dur?'<span class="vp-dur">'+dur+'</span>':'')+'<span class="vp-bar"></span>';
+  th.appendChild(ui);
+  if(!VP_LIVE)return;
+  const href=a.getAttribute('href')||'',yt=m&&m[1],bar=ui.querySelector('.vp-bar');
+  let timer=0,media=null;
+  const show=()=>{if(media)media.classList.add('on')};
+  const start=()=>{
+    if(media||timer)return;
+    const clip=VP_CLIPS[href];
+    if(!clip&&!yt)return;
+    c.classList.add('vp-live');
+    timer=setTimeout(()=>{
+      timer=0;
+      if(clip){
+        const v=document.createElement('video');v.className='vp-media';v.src=clip;v.muted=true;v.loop=true;v.playsInline=true;v.setAttribute('playsinline','');
+        v.addEventListener('playing',show);
+        v.addEventListener('timeupdate',()=>{if(v.duration)bar.style.transform='scaleX('+v.currentTime/v.duration+')'});
+        media=v;th.insertBefore(v,ui);v.play().catch(()=>{});
+      }else{
+        const f=document.createElement('iframe');f.className='vp-media';f.tabIndex=-1;f.title='';f.setAttribute('aria-hidden','true');f.allow='autoplay; encrypted-media';f.referrerPolicy='strict-origin-when-cross-origin';
+        f.src='https://www.youtube-nocookie.com/embed/'+yt+'?autoplay=1&mute=1&controls=0&playsinline=1&rel=0&loop=1&playlist='+yt;
+        f.addEventListener('load',()=>setTimeout(()=>{if(media!==f)return;show();bar.style.transition='transform '+VP_EMBED_BAR+'s linear';bar.style.transform='scaleX(1)'},800));
+        media=f;th.insertBefore(f,ui);
+      }
+    },clip?0:250);
+  };
+  const stop=()=>{
+    clearTimeout(timer);timer=0;
+    if(media){if(media.pause){media.pause();media.currentTime=0}media.remove();media=null}
+    c.classList.remove('vp-live');bar.style.transition='';bar.style.transform='';
+  };
+  c.addEventListener('pointerenter',start);c.addEventListener('pointerleave',stop);
+  c.addEventListener('focusin',e=>{if(e.target.matches(':focus-visible'))start()});c.addEventListener('focusout',stop);
+});
+function initTilt(){
+  document.querySelectorAll('.grid.photo .card').forEach(card=>{
+    const flat=!card.classList.contains('series'),th=card.querySelector('.thumb'),img=th&&th.querySelector('img');
+    if(!img)return;
+    const sheen=document.createElement('span');sheen.className='tilt-sheen';
+    th.append(sheen);
+    const T={duration:.5,ease:'power3.out'},q=(el,prop)=>gsap.quickTo(el,prop,T);
+    const rx=q(th,'rotationX'),ry=q(th,'rotationY'),ix=flat?q(img,'xPercent'):()=>{},iy=flat?q(img,'yPercent'):()=>{},sx=q(sheen,'xPercent'),sy=q(sheen,'yPercent');
+    let active=false;
+    const enter=()=>{active=true;th.classList.add('is-tilt');gsap.set(th,{transformPerspective:Math.max(900,th.offsetWidth*2.2)});gsap.to(th,{scale:1.03,...T});if(flat)gsap.to(img,{scale:1.12,...T})};
+    const leave=()=>{active=false;th.classList.remove('is-tilt');rx(0);ry(0);ix(0);iy(0);sx(0);sy(0);gsap.to(th,{scale:1,...T});if(flat)gsap.to(img,{scale:1,...T})};
+    card.addEventListener('pointermove',e=>{
+      const c=card.getBoundingClientRect(),x=(e.clientX-c.left-th.offsetLeft)/th.offsetWidth,y=(e.clientY-c.top-th.offsetTop)/th.offsetHeight;
+      if(x<0||x>1||y<0||y>1){if(active)leave();return}
+      if(!active)enter();
+      const nx=x-.5,ny=y-.5;
+      ry(nx*20);rx(-ny*20);
+      ix(-nx*8);iy(-ny*8);sx(-nx*4);sy(-ny*4);
+      th.style.setProperty('--gx',x*100+'%');th.style.setProperty('--gy',y*100+'%');
+    });
+    card.addEventListener('pointerleave',()=>{if(active)leave()});
+  });
+}
+function initTimeline(){
+  const tl=document.querySelector('.tl'),line=tl.querySelector('.tl-line'),TOTAL=2.4,FADE=.45,EASE='power1.inOut',curve=gsap.parseEase(EASE);
+  const when=f=>{let a=0,b=1;for(let i=0;i<20;i++){const m=(a+b)/2;curve(m)<f?a=m:b=m}return a*TOTAL};
+  const lb=line.getBoundingClientRect(),anim=gsap.timeline({paused:true});
+  anim.fromTo(line,{scaleY:0},{scaleY:1,duration:TOTAL,ease:EASE},0);
+  tl.querySelectorAll('.job').forEach(j=>{
+    const f=Math.max(0,(j.querySelector('.tl-dot').getBoundingClientRect().top-lb.top)/lb.height);
+    anim.fromTo([...j.children],{x:-10,opacity:0},{x:0,opacity:1,duration:FADE,ease:'power2.out'},when(f));
+  });
+  let lastY=scrollY,anchorY=null,anchorP=0,back=null,queued=false;
+  const sync=()=>{
+    queued=false;
+    const y=scrollY,startY=y+tl.getBoundingClientRect().top-innerHeight*.75,dy=y-lastY;
+    if(Math.abs(dy)<1)return;
+    const holdY=startY+innerHeight*.4;
+    if(dy<0&&y<holdY){
+      if(anchorY===null){anchorY=Math.max(Math.min(lastY,holdY),startY+1);anchorP=anim.progress();anim.pause()}
+      const p=anchorP*Math.max(0,y-startY)/(anchorY-startY);
+      if(back)back.kill();
+      back=gsap.to(anim,{progress:p,duration:.4,ease:'power2.out'});
+    }else if(dy>0){
+      anchorY=null;
+      if(back){back.kill();back=null}
+      if(y>startY)anim.play();
+    }
+    lastY=y;
+  };
+  addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(sync)}},{passive:true});
+  const playIfSeen=()=>{if(tl.getBoundingClientRect().top<innerHeight*.75)anim.play()};
+  addEventListener('works-tab',playIfSeen);playIfSeen();
+}
+function loadGsap(file,sri,cb){const g=document.createElement('script');g.src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/'+file;g.integrity=sri;g.crossOrigin='anonymous';g.onload=cb;document.head.appendChild(g)}
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches){
+  loadGsap('gsap.min.js','sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt',()=>{
+    if(matchMedia('(hover:hover) and (pointer:fine)').matches)initTilt();
+    initTimeline();
+  });
+}
+document.querySelectorAll('.go:not(.muted)').forEach(g=>{if(/看片|看相簿/.test(g.textContent))g.classList.add('go-ring')});
+if(matchMedia('(hover:none) and (pointer:coarse) and (prefers-reduced-motion:no-preference)').matches){
+  const wake=new IntersectionObserver(es=>es.forEach(e=>e.target.closest('.card').classList.toggle('vp-awake',e.isIntersecting)),{rootMargin:'-35% 0px -35% 0px'});
+  document.querySelectorAll('.grid:not(.photo) .card .thumb').forEach(t=>{if(t.querySelector('img'))wake.observe(t)});
+  const reveal=new IntersectionObserver(es=>es.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const c=e.target;reveal.unobserve(c);c.classList.add('rv-in');
+    setTimeout(()=>c.classList.remove('rv','rv-in'),700);
+  }),{rootMargin:'0px 0px -12% 0px'});
+  document.querySelectorAll('.grid.photo .card').forEach(c=>{c.classList.add('rv');reveal.observe(c)});
+  document.addEventListener('touchstart',()=>{},{passive:true});
+  document.addEventListener('click',e=>{
+    const c=e.target.closest('.card'),g=e.target.closest('.go-ring')||(c&&c.querySelector('.go-ring'));
+    if(!g)return;
+    g.classList.remove('go-tap');void g.offsetWidth;g.classList.add('go-tap');
+  });
+  document.addEventListener('animationend',e=>{if(e.animationName==='go-ring')e.target.classList.remove('go-tap')});
+}
+const tabLinks=[...document.querySelectorAll('.jump a')],tabIds=tabLinks.map(a=>a.getAttribute('href').slice(1));
+function showTab(id,animate){
+  tabIds.forEach(t=>{const sec=document.getElementById(t),on=t===id;sec.hidden=!on;sec.classList.toggle('is-in',on&&animate)});
+  tabLinks.forEach(a=>{if(a.getAttribute('href')==='#'+id)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current')});
+  dispatchEvent(new Event('works-tab'));
+}
+function tabFromUrl(animate){
+  const id=location.hash.slice(1);
+  if(tabIds.includes(id))showTab(id,animate);else if(!id)showTab(tabIds[0],animate);
+}
+tabLinks.forEach(a=>a.addEventListener('click',e=>{
+  e.preventDefault();
+  const id=a.getAttribute('href').slice(1);
+  if(a.hasAttribute('aria-current'))return;
+  history.pushState(null,'','#'+id);
+  showTab(id,true);
+}));
+addEventListener('popstate',()=>tabFromUrl(true));addEventListener('hashchange',()=>tabFromUrl(true));
+tabFromUrl(false);
+if(tabIds.includes(location.hash.slice(1)))addEventListener('load',()=>requestAnimationFrame(()=>document.getElementById('works').scrollIntoView({behavior:'instant'})));
+let baBusy=false;
+function compareTheme(cur,next){
+  baBusy=true;
+  const SWEEP=1400;
+  let mode='intro',t0=0,raf=0,p=100,from=100,to=0,settled=false;
+  const put=v=>{p=Math.min(100,Math.max(0,v));root.style.setProperty('--ba-p',p+'%')};
+  const ease=x=>1-Math.pow(1-x,3);
+  const sweep=x=>.5+4*Math.pow(x-.5,3);
+  put(100);
+  const tr=document.startViewTransition(()=>{root.classList.add('ba-on');setTheme(next)});
+  const settle=target=>{if(settled)return;settled=true;mode='settle';from=p;to=target;t0=performance.now()};
+  const finish=()=>{if(to===100)setTheme(cur);tr.skipTransition()};
+  const tick=now=>{
+    if(!t0)t0=now;
+    const dt=now-t0;
+    if(mode==='intro'){const k=Math.min(1,dt/SWEEP);put(100-100*sweep(k));if(k===1){settled=true;to=0;finish();return}}
+    else if(mode==='settle'){const k=Math.min(1,dt/450);put(from+(to-from)*ease(k));if(k===1){finish();return}}
+    raf=requestAnimationFrame(tick);
+  };
+  const xp=e=>e.clientX/innerWidth*100;
+  const down=e=>{
+    if(settled)return;
+    if(Math.abs(e.clientX-p/100*innerWidth)>44){settle(0);return}
+    mode='drag';put(xp(e));
+    try{root.setPointerCapture(e.pointerId)}catch(err){}
+  };
+  const move=e=>{if(mode==='drag')put(xp(e))};
+  const up=()=>{if(mode==='drag')settle(p<50?0:100)};
+  const wheel=()=>settle(0);
+  const key=e=>{
+    if(e.key==='Escape')settle(100);
+    else if(e.key==='Enter')settle(0);
+    else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){if(!settled){mode='keys';put(p+(e.key==='ArrowLeft'?-5:5))}}
+    else return;
+    e.preventDefault();
+  };
+  addEventListener('pointerdown',down,true);addEventListener('pointermove',move,true);
+  addEventListener('pointerup',up,true);addEventListener('pointercancel',up,true);
+  addEventListener('wheel',wheel,{capture:true,passive:true});addEventListener('keydown',key,true);
+  tr.ready.then(()=>{raf=requestAnimationFrame(tick)}).catch(()=>{});
+  tr.finished.catch(()=>{}).then(()=>{
+    cancelAnimationFrame(raf);
+    removeEventListener('pointerdown',down,true);removeEventListener('pointermove',move,true);
+    removeEventListener('pointerup',up,true);removeEventListener('pointercancel',up,true);
+    removeEventListener('wheel',wheel,true);removeEventListener('keydown',key,true);
+    root.classList.remove('ba-on');root.style.removeProperty('--ba-p');baBusy=false;
+  });
+}
+btn.addEventListener('click',()=>{
+  if(baBusy)return;
+  const cur=root.getAttribute('data-theme'),next=cur==='light'?'dark':'light';
+  if(!document.startViewTransition||matchMedia('(prefers-reduced-motion:reduce)').matches){setTheme(next);return}
+  compareTheme(cur,next);
+});
 </script>
 </body>
 </html>
