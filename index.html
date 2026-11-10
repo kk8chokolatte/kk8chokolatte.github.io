@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>(function(){var en=/[?&]lang=en(&|$)/.test(location.search),r=document.documentElement,t=null;window.LANG=en?'en':'zh';try{t=localStorage.getItem(en?'kk-theme-en':'kk-theme')}catch(e){}r.setAttribute('data-theme',t==='dark'||t==='light'?t:(en?'dark':'light'));if(en)r.lang='en';})();</script>
 <style>
 :root{
   --bg:#F3F2EE; --ink:#151412; --card:#FFFFFF; --well:#E4E1DA; --line:#D3CFC6; --line-strong:#B3AEA3;
@@ -295,6 +296,8 @@ html.ba-on::view-transition-group(ba-ui){animation:none}
 .ep:hover .ep-cap,.ep:focus-visible .ep-cap,.ep.is-open .ep-cap{opacity:1;transition:opacity .3s linear .4s}
 @media (max-width:560px){.ep-list{padding:16px;gap:24px}.ep-row{gap:4px;height:min(420px,56vh)}.ep-row+.ep-row{margin-top:-20px}.ep-group .ep-row+.ep-row{margin-top:-8px}.ep-cap{left:6px;bottom:6px;max-width:calc(100% - 12px);padding:3px 6px;font-size:11px}}
 @media (prefers-reduced-motion:reduce){.ep,.ep-cap,.ep:hover .ep-cap,.ep:focus-visible .ep-cap,.ep.is-open .ep-cap{transition:none}}
+.lang-btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-family:var(--mono);letter-spacing:.04em}
+.nav a.lang-btn{display:inline-flex}
 </style>
 </head>
 <body>
@@ -302,6 +305,7 @@ html.ba-on::view-transition-group(ba-ui){animation:none}
   <a class="brand" href="#top"><i class="rec" aria-hidden="true"></i><b>KELLY KO</b><span>柯盛惠</span></a>
   <nav class="nav" aria-label="主選單">
     <a href="#works">作品</a><a href="#about">關於</a><a href="#cv">資歷</a><a href="#contact">聯絡</a>
+    <a class="theme lang-btn" id="langBtn" href="?lang=en" hreflang="en" lang="en">EN</a>
     <button class="theme" id="themeBtn" type="button" aria-label="切換深色模式">深色</button>
   </nav>
 </div></header>
@@ -712,6 +716,20 @@ const WORKS = [
   ]
  }
 ];
+const EN_TEXT={"柯盛惠 Kelly Ko｜影音編導作品集":"Kelly Ko | Video Director Portfolio","影音編導柯盛惠的作品集：醫療衛教訪談、線上課程、直式短影音、料理美食、直播活動與平面攝影。":"Portfolio of video director Kelly Ko: health and medical interviews, online courses, vertical shorts, food videos, livestreams and events, and photography.","主選單":"Main menu","作品":"Work","關於":"About","資歷":"Experience","聯絡":"Contact","作品分類":"Work categories","企劃、拍攝、剪輯都能獨立完成，在有限的預算與人力裡懂得取捨，把每一分資源都花在畫面上。":"I plan, shoot, and edit on my own, and I know where to make trade-offs on a tight budget and a small crew, so every bit of the budget ends up on screen.","現職":"Current role","Cofit 高級影音編導":"Senior Video Director, Cofit","入行":"In the field","2017 年起":"Since 2017","訪談":"Interviews","線上課程":"Online Courses","課程":"Courses","直式短影音":"Vertical Shorts","短影音":"Shorts","料理與美食":"Food & Cooking","料理":"Food","直播與活動":"Live & Events","直播":"Live","平面攝影":"Photography","攝影":"Photo","負責：拍攝、後製":"Role: filming, post-production","負責：企劃、拍攝、後製":"Role: planning, filming, post-production","負責：企劃、導播、後製":"Role: planning, live directing, post-production","負責：拍攝":"Role: photography","資源有限，":"Limited resources,","畫面不打折。":"uncompromised visuals.","營養系畢業，讓我在拍攝醫師、營養師的衛教內容時，能先聽懂專業，再把它拍得好懂。":"With a degree in nutrition, I can follow what doctors and dietitians are explaining before I film it, and then make it easy for viewers to understand.","在精簡的預算、人力與時程裡，我能夠一手包辦企劃、拍攝到剪輯，讓有限的資源也能呈現最好的畫面。服飾人物與商品情境的平面拍攝也能一併完成。":"On lean budgets, crews, and timelines, I handle everything from planning and filming to editing, so even limited resources deliver the best possible picture. I also shoot fashion, portrait, and product photography.","目前也與 AI 協作，開發剪輯插件與動態素材庫，並把字卡、字幕等重複的製作流程整理成可以一再使用的工作流。":"I also work with AI to build editing plugins and a motion asset library, and to turn repetitive tasks like title cards and subtitles into reusable workflows.","聯絡我":"Get in Touch","柯盛惠 Kelly Ko 個人照":"Portrait of Kelly Ko","2025.01 – 迄今":"2025.01 – Present","高級影音編導｜群健科技股份有限公司（Cofit）":"Senior Video Director | Cofit","健康醫療衛教影音：拍攝、剪輯與後期調光；商品平面拍攝、活動紀錄拍攝，廣告素材延伸。":"Health and medical education videos: filming, editing, and color grading. Also product photography, event coverage, and ad asset adaptations.","攝影編導｜蓓莉洋行":"Photo & Video Director | Bailey Foreign Firm","服飾／飾品商品攝影、社群影音製作、新品連線直播，官網後台與行銷活動設置。":"Fashion and accessory product photography, social video production, and new-arrival livestreams, plus online store management and campaign setup.","影音編導｜醫鼎科技股份有限公司（Heho）":"Video Director | Heho","健康新聞、人物專訪、平面側拍；前期企劃到後期剪輯，每週健康週報影音轉直播串流。":"Health news, profile interviews, and behind-the-scenes photography, from planning through editing. Also turned the weekly health report into a livestream.","內容行銷編導｜聯邦網通科技股份有限公司":"Content Marketing Director | yesgogogo","yesgogogo 即食購 FB／YouTube 直播與影音：腳本企劃、導播到後期短影音推播。":"Facebook and YouTube livestreams and videos for the yesgogogo food shop: scripting, live directing, and short-form promos.","編導｜電電購（三立媒體集團）":"Director | DDG (SET Media Group)","FB／YouTube 開箱影片，聯名商品廣告與平面拍攝，統籌廠商溝通。":"Facebook and YouTube unboxing videos, co-branded product ads and photography, and vendor coordination.","編導｜庫立馬媒體科技股份有限公司（料理123）":"Director | Cooking123","料理教學與商業合作影片；節目規劃、腳本、拍攝，排程製播、審片、分派剪輯。":"Cooking tutorials and branded content: program planning, scripting, filming, release scheduling, review, and editing assignments.","技能與器材":"Skills & Gear","軟體":"Software","AI 協作":"AI Collaboration","Premiere 粗剪插件":"Premiere rough-cut plugin","動態素材庫":"Motion asset library","器材":"Gear","回到頂端":"Back to top","關閉相簿":"Close album","超完美溏心蛋":"How to Make Perfect Jammy Eggs","寶證學得會的大廚菜":"Chef recipes you can totally make","大醬湯":"Easy Korean Soybean Stew","親古們，歐爸KAI嗑啦":"Come on, let's eat!","放閃司康":"Scones Made with Love","新手媽媽的無限挑戰":"New mom, big kitchen challenge","芒果蘆筍燴雞柳":"Mango Asparagus Chicken Stir-Fry","恆隆行夏日特派員":"Hengstyle summer special","擺變食光：年節吉食":"Lucky Dishes for Lunar New Year","親戚們吃年夜飯的小心機":"Sneaky Tricks Relatives Pull at New Year's Dinner","年節企劃":"Lunar New Year special","別再戒掉澱粉了！掌握健康減肥的關鍵":"Stop Cutting Carbs! The Key to Healthy Weight Loss","Cofit 國際醫學解碼":"Cofit Medical Insights","父母最該做的只有這一件事":"The One Thing Parents Should Do","女人療心室 ft. 王仁甫":"Women's Healing Room ft. Wang Jen-fu","早餐三明治評比：最飆血糖是它？！":"Breakfast Sandwich Showdown: Which One Spikes Blood Sugar Most?","初日診所 范亞萱醫師":"Dr. Fan Ya-hsuan, Churi Clinic","補對營養抗氧化＋防老":"Eat Right for Antioxidants and Healthy Aging","Heho 專家說 · 謝榮鴻教授、劉怡里營養師":"Heho Expert Talk · Prof. Hsieh Rong-hong and dietitian Liu Yi-li","《子宮養好，女人不老》30+ 女性婦科的健康必修課":"A Healthy Uterus, Ageless Women: Essential Gynecologic Health for Women 30+","Cofit 健康課程｜鄭丞傑醫師｜5 章 17 單元・約 3 小時":"Cofit health course | Dr. Cheng Cheng-chieh | 5 chapters, 17 lessons · about 3 hours","專為 30 歲以上女性設計的婦科健康課程，從日常保養、檢查報告到治療選擇，一次講清楚。":"A gynecologic health course for women over 30 that explains daily care, test results, and treatment options in one place.","yesgogogo 直播主海選：小當家爭霸戰":"yesgogogo Host Tryouts: Little Chef Battle","直播預告・2021":"Livestream teaser · 2021","看片 ↗":"Watch ↗","自由時報報導 ↗":"Read the Liberty Times story ↗","速纖驕女：陳子玄代言花絮":"Behind the Scenes with Chen Tzu-hsuan","幕後花絮・2021":"Behind the scenes · 2021","服飾選品新品宣傳":"New Drops at the Boutique","服飾選品社群影片":"Boutique Style Video","服飾選品訪談紀錄":"Meet the Boutique Team","營養師生活解答":"A Dietitian's Everyday Answers","營養師教你選":"A Dietitian's Picks","營養師":"Ask a Dietitian","商品情境":"Product Photos","Cofit 保健品・恆隆行 OASIS・Heho 希望堅果｜2023–2025":"Cofit supplements · Hengstyle OASIS · Heho Hope Nuts | 2023–2025","維生素 D3":"Vitamin D3","二型膠原葡萄糖胺":"Type II Collagen + Glucosamine","極潤透明質酸鈉":"Hydrating Sodium Hyaluronate","恆隆行 OASIS 瞬飲機":"Hengstyle OASIS Instant Water Dispenser","Heho 希望堅果":"Heho Hope Nuts","上線頁面 ↗":"Product page ↗","服飾街拍":"Fashion Street Style","服飾攝影・2024":"Fashion photos · 2024","人物訪談側拍":"Portraits from Interviews","人物攝影・2023":"Portrait photos · 2023","活動側拍":"Event Photos","Cofit 11 週年・萬粽選物節｜2022–2025":"Cofit 11th anniversary · Dumpling Fair | 2022–2025","Cofit 11 週年活動":"Cofit's 11th Anniversary Party","萬粽選物節：張秋永主廚評選端午名粽":"Dumpling Fair: Chef Chang Chiu-yung Picks the Best Rice Dumplings"};
+const T=(zh,en)=>LANG==='en'?en:zh;
+if(LANG==='en'){
+  const tr=x=>EN_TEXT[x]??x;
+  WORKS.forEach(w=>{['title','sub','desc','linkLabel'].forEach(k=>{if(w[k])w[k]=tr(w[k])});(w.links||[]).forEach(l=>{if(l.label)l.label=tr(l.label)});(w.groups||[]).forEach(g=>{g.title=tr(g.title);if(g.linkLabel)g.linkLabel=tr(g.linkLabel)})});
+  document.title=tr(document.title);
+  document.querySelectorAll('meta[name="description"]').forEach(x=>x.content=tr(x.content));
+  const wk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),nodes=[];let nd;while((nd=wk.nextNode()))nodes.push(nd);
+  nodes.forEach(x=>{if(x.parentNode.closest('script,style'))return;const t=x.nodeValue.trim();if(t&&EN_TEXT[t])x.nodeValue=x.nodeValue.replace(t,EN_TEXT[t])});
+  document.querySelectorAll('[alt],[aria-label],[title]').forEach(e=>['alt','aria-label','title'].forEach(a=>{const v=e.getAttribute(a);if(v&&EN_TEXT[v])e.setAttribute(a,EN_TEXT[v])}));
+}
+{const lb=document.getElementById('langBtn');
+ if(LANG==='en'){lb.textContent='中文';lb.lang='zh-Hant';lb.hreflang='zh-Hant';lb.setAttribute('href','./')}
+ lb.addEventListener('click',e=>{e.preventDefault();const u=new URL(location.href);if(LANG==='en')u.searchParams.delete('lang');else u.searchParams.set('lang','en');location.href=u.pathname+u.search+location.hash});}
 
 function el(tag, attrs, html){const e=document.createElement(tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(html!=null)e.innerHTML=html;return e;}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
@@ -723,30 +741,30 @@ document.querySelectorAll('[data-cat]').forEach(grid=>{
     const card=multi?el('div',{class:'card multi'}):(live?el('a',{class:'card',href:w.url,target:'_blank',rel:'noopener'}):el('div',{class:'card pending'}));
     const icon='<svg width="44" height="44" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="var(--accent)"/><path d="M10 8v8l6-4z" fill="#fff"/></svg>';
     const doc='<svg width="44" height="44" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="var(--accent)"/><path d="M8 7h8M8 11h8M8 15h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>';
-    const thumb=w.img?`<img src="${w.img}" alt="${esc(w.title)} 縮圖" loading="lazy">`:`<span class="ph">${live?(w.kind==='press'?doc:icon):'縮圖待補'}</span>`;
+    const thumb=w.img?`<img src="${w.img}" alt="${esc(w.title)}${T(' 縮圖',' thumbnail')}" loading="lazy">`:`<span class="ph">${live?(w.kind==='press'?doc:icon):T('縮圖待補','Thumbnail coming soon')}</span>`;
     if(w.kind==='album'){
       const groups=w.groups||[];
       const n=groups.length?groups.reduce((a,g)=>a+g.photos.length,0):(w.photos||[]).length;
-      const cover=groups.length?groups.map(g=>`<img src="${g.photos[0]}" alt="${esc(g.title)}" loading="lazy">`).join(''):(n?`<img src="${w.photos[0]}" alt="${esc(w.title)} 封面" loading="lazy">`:'<span class="ph">照片待補</span>');
+      const cover=groups.length?groups.map(g=>`<img src="${g.photos[0]}" alt="${esc(g.title)}" loading="lazy">`).join(''):(n?`<img src="${w.photos[0]}" alt="${esc(w.title)}${T(' 封面',' cover')}" loading="lazy">`:'<span class="ph">'+T('照片待補','Photos coming soon')+'</span>');
       const c=el('div',{class:'card album'+(w.series?' series':'')});
       if(groups.length){c.style.setProperty('--n',groups.length);c.style.setProperty('--ar',String(Math.max(21/9,groups.length*0.6)));}
-      c.innerHTML=`<button class="thumb" type="button" ${n?'':'disabled'} aria-label="開啟相簿：${esc(w.title)}">${cover}${n?`<span class="badge">${w.series?groups.length+' 款商品・':''}${n} 張</span>`:''}</button><div class="meta"><div><h3>${esc(w.title)}</h3><p>${esc(w.sub)}</p></div><span class="acts">${n?'<button class="go open" type="button">看相簿</button>':'<span class="go muted">照片待補</span>'}${w.url?`<a class="go" href="${esc(w.url)}" target="_blank" rel="noopener">${esc(w.linkLabel||'報導 ↗')}</a>`:''}</span></div>`;
+      c.innerHTML=`<button class="thumb" type="button" ${n?'':'disabled'} aria-label="${T('開啟相簿：','Open album: ')}${esc(w.title)}">${cover}${n?`<span class="badge">${w.series?groups.length+T(' 款商品・',' products · '):''}${n}${T(' 張',' photos')}</span>`:''}</button><div class="meta"><div><h3>${esc(w.title)}</h3><p>${esc(w.sub)}</p></div><span class="acts">${n?'<button class="go open" type="button">'+T('看相簿','View album')+'</button>':'<span class="go muted">'+T('照片待補','Photos coming soon')+'</span>'}${w.url?`<a class="go" href="${esc(w.url)}" target="_blank" rel="noopener">${esc(w.linkLabel||T('報導 ↗','Article ↗'))}</a>`:''}</span></div>`;
       if(n){const open=()=>openGallery(w);c.querySelector('.thumb').addEventListener('click',open);c.querySelector('.open').addEventListener('click',open);}
       grid.appendChild(c);return;
     }
     if(multi){
       const acts=w.links.map(l=>`<a class="go" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join('');
-      card.innerHTML=`<a class="thumb" href="${esc(w.links[0].url)}" target="_blank" rel="noopener" aria-label="${esc(w.title)} 看片">${thumb}</a><div class="meta"><div><h3>${esc(w.title)}</h3><p>${esc(w.sub)}</p></div><span class="acts">${acts}</span></div>`;
+      card.innerHTML=`<a class="thumb" href="${esc(w.links[0].url)}" target="_blank" rel="noopener" aria-label="${esc(w.title)}${T(' 看片',' watch')}">${thumb}</a><div class="meta"><div><h3>${esc(w.title)}</h3><p>${esc(w.sub)}</p></div><span class="acts">${acts}</span></div>`;
     }else{
-      const cta=live?(w.kind==='press'?'閱讀 ↗':(w.kind==='course'?'看試看片 ↗':'看片 ↗')):'連結待補';
+      const cta=live?(w.kind==='press'?T('閱讀 ↗','Read ↗'):(w.kind==='course'?T('看試看片 ↗','Watch preview ↗'):T('看片 ↗','Watch ↗'))):T('連結待補','Link coming soon');
       card.innerHTML=`<div class="thumb">${thumb}</div><div class="meta"><div><h3>${esc(w.title)}</h3><p>${esc(w.sub)}</p>${w.desc?`<p class="desc">${esc(w.desc)}</p>`:''}</div><span class="go">${cta}</span></div>`;
     }
     grid.appendChild(card);
   });
   const c=document.querySelector(`[data-count="${grid.dataset.cat}"]`);
-  if(c&&grid.dataset.cat==='photo'){c.textContent=`${list.length} 組相簿`;return;}
-  if(c&&grid.dataset.cat==='course'){c.textContent=`${list.length} 門課程`;return;}
-  if(c){const n=list.filter(w=>w.kind!=='press').length;const p=list.length-n;c.textContent=`${n} 支影片${p?`、${p} 篇活動報導`:''}`;}
+  if(c&&grid.dataset.cat==='photo'){c.textContent=T(`${list.length} 組相簿`,`${list.length} albums`);return;}
+  if(c&&grid.dataset.cat==='course'){c.textContent=T(`${list.length} 門課程`,`${list.length} course${list.length>1?'s':''}`);return;}
+  if(c){const n=list.filter(w=>w.kind!=='press').length;const p=list.length-n;c.textContent=T(`${n} 支影片${p?`、${p} 篇活動報導`:''}`,`${n} video${n>1?'s':''}${p?`, ${p} event report${p>1?'s':''}`:''}`);}
 });
 
 /* 相簿 */
@@ -754,10 +772,10 @@ const gal=document.getElementById('gallery');
 function buildAlbum(w,body){
   const perRow=innerWidth>900?8:innerWidth>560?4:3;
   const rows=list=>{const n=Math.ceil(list.length/perRow),out=[];let k=0;for(let r=0;r<n;r++){const c=Math.ceil((list.length-k)/(n-r));out.push(list.slice(k,k+c));k+=c}return out};
-  const panel=(src,label)=>`<button type="button" class="ep" aria-label="放大 ${esc(label)}"><img src="${src}" alt="${esc(label)}" loading="lazy"><span class="ep-cap">${esc(label)}</span></button>`;
+  const panel=(src,label)=>`<button type="button" class="ep" aria-label="${T('放大 ','Enlarge ')}${esc(label)}"><img src="${src}" alt="${esc(label)}" loading="lazy"><span class="ep-cap">${esc(label)}</span></button>`;
   const block=(photos,name)=>rows(photos.map((src,i)=>panel(src,name+' '+String(i+1).padStart(2,'0')))).map(r=>`<div class="ep-row">${r.join('')}</div>`).join('');
   body.className='g-body ep-list';
-  body.innerHTML=w.groups?w.groups.map(g=>`<section class="ep-group"><div class="ep-head"><h3>${esc(g.title)}</h3>${g.year?`<span class="g-year">${esc(g.year)}</span>`:''}${g.url?`<a href="${esc(g.url)}" target="_blank" rel="noopener">${esc(g.linkLabel||'上線頁面 ↗')}</a>`:''}</div>${block(g.photos,g.title)}</section>`).join(''):block(w.photos,w.title);
+  body.innerHTML=w.groups?w.groups.map(g=>`<section class="ep-group"><div class="ep-head"><h3>${esc(g.title)}</h3>${g.year?`<span class="g-year">${esc(g.year)}</span>`:''}${g.url?`<a href="${esc(g.url)}" target="_blank" rel="noopener">${esc(g.linkLabel||T('上線頁面 ↗','Product page ↗'))}</a>`:''}</div>${block(g.photos,g.title)}</section>`).join(''):block(w.photos,w.title);
 }
 function openGallery(w){
   document.getElementById('galleryTitle').textContent=w.title;
@@ -831,13 +849,12 @@ gal.addEventListener('cancel',e=>{if(lbClose){e.preventDefault();lbClose()}});
 gal.addEventListener('close',()=>{if(lbClose)lbClose(true)});
 
 /* 時間碼＝入行年資：時＝年、分＝月（自 2017 年 7 月起自動計算） */
-(function(){const now=new Date();const total=(now.getFullYear()-2017)*12+now.getMonth()-6;const t=document.getElementById('tcYears');if(t&&total>0){const y=Math.floor(total/12),m=total%12;const p=n=>String(n).padStart(2,'0');t.textContent=`${p(y)}:${p(m)}:00:00`;t.title=m?`入行 ${y} 年 ${m} 個月`:`入行 ${y} 年`;}})();
+(function(){const now=new Date();const total=(now.getFullYear()-2017)*12+now.getMonth()-6;const t=document.getElementById('tcYears');if(t&&total>0){const y=Math.floor(total/12),m=total%12;const p=n=>String(n).padStart(2,'0');t.textContent=`${p(y)}:${p(m)}:00:00`;t.title=T(m?`入行 ${y} 年 ${m} 個月`:`入行 ${y} 年`,`${y} years${m?` ${m} months`:''} in the field`);}})();
 
 /* 深淺色切換（預設淺色） */
 const root=document.documentElement, btn=document.getElementById('themeBtn');
-function setTheme(t){root.setAttribute('data-theme',t);btn.textContent=t==='light'?'深色':'淺色';btn.setAttribute('aria-label',t==='light'?'切換深色模式':'切換淺色模式');try{localStorage.setItem('kk-theme',t)}catch(e){}}
-let saved=null;try{saved=localStorage.getItem('kk-theme')}catch(e){}
-setTheme(saved==='dark'?'dark':'light');
+function setTheme(t,keep=true){root.setAttribute('data-theme',t);btn.textContent=t==='light'?T('深色','Dark'):T('淺色','Light');btn.setAttribute('aria-label',t==='light'?T('切換深色模式','Switch to dark mode'):T('切換淺色模式','Switch to light mode'));if(keep)try{localStorage.setItem(LANG==='en'?'kk-theme-en':'kk-theme',t)}catch(e){}}
+setTheme(root.getAttribute('data-theme')==='dark'?'dark':'light',false);
 /* 預覽短片：連結網址 → MP4 路徑。有短片的作品優先播短片，其次 YouTube 嵌入，都沒有則維持推鏡。 */
 const VP_CLIPS={};
 const VP_LIVE=matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)').matches,VP_EMBED_BAR=20,VP_MIN_HOLD=500,VP_NO_EMBED=new Set();
@@ -847,7 +864,7 @@ document.querySelectorAll('.grid:not(.photo) .card').forEach(c=>{
   const th=c.querySelector('.thumb');
   if(!th||!th.querySelector('img'))return;
   const a=c.matches('a')?c:th,m=(a.getAttribute('href')||'').match(/(?:v=|youtu\.be\/|shorts\/)([\w-]{11})/),sec=m&&VP_SECONDS[m[1]],sub=c.querySelector('.meta p');
-  const hrs=sub&&!sec&&sub.textContent.match(/約\s*\d+\s*小時/);
+  const hrs=sub&&!sec&&sub.textContent.match(/約\s*\d+\s*小時|about \d+ hours?/);
   const dur=sec?Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'):hrs?hrs[0]:'';
   const ui=document.createElement('span');ui.className='vp-ui';ui.setAttribute('aria-hidden','true');
   ui.innerHTML='<span class="vp-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>'+(dur?'<span class="vp-dur">'+dur+'</span>':'')+'<span class="vp-bar"></span>';
