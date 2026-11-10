@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script>(function(){var en=/[?&]lang=en(&|$)/.test(location.search),r=document.documentElement,t=null;window.LANG=en?'en':'zh';try{t=localStorage.getItem(en?'kk-theme-en':'kk-theme')}catch(e){}r.setAttribute('data-theme',t==='dark'||t==='light'?t:(en?'dark':'light'));if(en)r.lang='en';})();</script>
+<script>(function(){var en=/[?&]lang=en(&|$)/.test(location.search),r=document.documentElement;window.LANG=en?'en':'zh';r.setAttribute('data-theme',en?'dark':'light');if(en)r.lang='en';addEventListener('pagereveal',function(e){if(!e.viewTransition)return;var f=null;try{f=sessionStorage.getItem('lx');sessionStorage.removeItem('lx')}catch(x){}f=f===null?window.__lxAlign:f;if(f===null||matchMedia('(prefers-reduced-motion:reduce)').matches){e.viewTransition.skipTransition();return}window.__lx=true;r.classList.add('lx');e.viewTransition.finished.finally(function(){r.classList.remove('lx')})});})();</script>
+<link rel="expect" href="#lx-end" blocking="render">
 <style>
 :root{
   --bg:#F3F2EE; --ink:#151412; --card:#FFFFFF; --well:#E4E1DA; --line:#D3CFC6; --line-strong:#B3AEA3;
@@ -188,19 +189,6 @@ a.card:hover .go{color:var(--ink);text-decoration:underline}
 .g-year{margin-left:10px;font-family:var(--mono);font-size:13px;font-weight:500;color:var(--muted)}
 /* 動態節奏：回饋 0.2–0.3 秒、展示 0.5–0.6 秒，同一條減速曲線 */
 @media (prefers-reduced-motion:no-preference){.jump strong{transition:color .25s cubic-bezier(.22,1,.36,1)}}
-/* Before / After 色調切換：點「深色／淺色」後以分界線比較兩種色調 */
-.ba-ui{display:none}
-html.ba-on{cursor:ew-resize;touch-action:pan-y}
-html.ba-on .ba-ui{display:block;position:fixed;inset:0;z-index:50;pointer-events:none;view-transition-name:ba-ui}
-@keyframes ba-hold{from{opacity:1}to{opacity:1}}
-html.ba-on::view-transition-old(root),html.ba-on::view-transition-new(root),html.ba-on::view-transition-new(ba-ui){animation:ba-hold 3600s linear;mix-blend-mode:normal;opacity:1}
-html.ba-on::view-transition-new(root){clip-path:inset(0 0 0 var(--ba-p,100%))}
-html.ba-on::view-transition-group(ba-ui){animation:none}
-.ba-line{position:absolute;top:0;bottom:0;left:var(--ba-p,100%);width:2px;margin-left:-1px;background:var(--accent)}
-.ba-knob{position:absolute;top:50%;left:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center}
-.ba-tag{position:absolute;background:var(--invert-bg);color:var(--invert-ink);border-radius:4px;padding:6px 10px}
-.ba-tag{top:84px;font:500 12px var(--mono);letter-spacing:.08em}
-.ba-tag.l{left:var(--pad)}.ba-tag.r{right:var(--pad)}
 /* Hover to Play：影片作品（目前以緩慢推鏡示意播放；手機只顯示播放鍵與片長） */
 .vp-ui{position:absolute;inset:0;pointer-events:none}
 .vp-media{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover;opacity:0;transition:opacity .4s cubic-bezier(.22,1,.36,1);pointer-events:none}
@@ -298,6 +286,16 @@ html.ba-on::view-transition-group(ba-ui){animation:none}
 @media (prefers-reduced-motion:reduce){.ep,.ep-cap,.ep:hover .ep-cap,.ep:focus-visible .ep-cap,.ep.is-open .ep-cap{transition:none}}
 .lang-btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-family:var(--mono);letter-spacing:.04em}
 .nav a.lang-btn{display:inline-flex}
+/* 語言切換轉場：舊語言畫面留在左邊，新語言隨分界線從右掃入（支援跨頁轉場的瀏覽器才有，其餘直接切換） */
+@media (prefers-reduced-motion:no-preference){@view-transition{navigation:auto}}
+.lx-ui{display:none}
+html.lx .lx-ui{display:block;position:fixed;inset:0;z-index:50;pointer-events:none;view-transition-name:lx-ui}
+html.lx::view-transition-group(root),html.lx::view-transition-old(root),html.lx::view-transition-group(lx-ui),html.lx::view-transition-new(lx-ui){animation:none;mix-blend-mode:normal}
+html.lx::view-transition-new(root){animation:lx-wipe .9s cubic-bezier(.65,0,.35,1) both;mix-blend-mode:normal}
+@keyframes lx-wipe{from{clip-path:inset(0 0 0 100%)}to{clip-path:inset(0 0 0 0)}}
+.lx-line{position:absolute;top:0;bottom:0;left:0;width:2px;margin-left:-1px;background:var(--accent);animation:lx-line .9s cubic-bezier(.65,0,.35,1) both}
+@keyframes lx-line{from{transform:translateX(100vw)}to{transform:translateX(0)}}
+.lx-knob{position:absolute;top:50%;left:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
@@ -306,7 +304,6 @@ html.ba-on::view-transition-group(ba-ui){animation:none}
   <nav class="nav" aria-label="主選單">
     <a href="#works">作品</a><a href="#about">關於</a><a href="#cv">資歷</a><a href="#contact">聯絡</a>
     <a class="theme lang-btn" id="langBtn" href="?lang=en" hreflang="en" lang="en">EN</a>
-    <button class="theme" id="themeBtn" type="button" aria-label="切換深色模式">深色</button>
   </nav>
 </div></header>
 
@@ -386,7 +383,7 @@ html.ba-on::view-transition-group(ba-ui){animation:none}
   <div class="g-head"><div><h2 id="galleryTitle"></h2><p id="gallerySub"></p></div><button type="button" class="g-close" id="galleryClose" aria-label="關閉相簿">✕</button></div>
   <div class="g-body" id="galleryBody"></div>
 </dialog>
-<div class="ba-ui" aria-hidden="true"><span class="ba-tag l">BEFORE</span><span class="ba-tag r">AFTER</span><div class="ba-line"><div class="ba-knob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg></div></div></div>
+<div class="lx-ui" aria-hidden="true"><div class="lx-line"><div class="lx-knob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg></div></div></div>
 <script>
 /* ===== 作品清單：在這裡補上連結（url 留空 = 顯示「連結待補」）===== */
 const WORKS = [
@@ -727,9 +724,10 @@ if(LANG==='en'){
   nodes.forEach(x=>{if(x.parentNode.closest('script,style'))return;const t=x.nodeValue.trim();if(t&&EN_TEXT[t])x.nodeValue=x.nodeValue.replace(t,EN_TEXT[t])});
   document.querySelectorAll('[alt],[aria-label],[title]').forEach(e=>['alt','aria-label','title'].forEach(a=>{const v=e.getAttribute(a);if(v&&EN_TEXT[v])e.setAttribute(a,EN_TEXT[v])}));
 }
+window.LX_MARKS='.hero,.hero h1,.hero-foot,#works,.sec:not([hidden]) .sec-head,.sec:not([hidden]) .card,#about,.about h2,.about p,#cv,.cv h2,.job,.tools>div,#contact';
 {const lb=document.getElementById('langBtn');
  if(LANG==='en'){lb.textContent='中文';lb.lang='zh-Hant';lb.hreflang='zh-Hant';lb.setAttribute('href','./')}
- lb.addEventListener('click',e=>{e.preventDefault();const u=new URL(location.href);if(LANG==='en')u.searchParams.delete('lang');else u.searchParams.set('lang','en');location.href=u.pathname+u.search+location.hash});}
+ lb.addEventListener('click',e=>{e.preventDefault();const u=new URL(location.href);if(LANG==='en')u.searchParams.delete('lang');else u.searchParams.set('lang','en');let h=location.hash;if('onpagereveal' in window)try{const L=[...document.querySelectorAll(window.LX_MARKS)].filter(x=>x.offsetParent),k=L.reduce((a,x,i)=>x.getBoundingClientRect().top<=80?i:a,-1);sessionStorage.setItem('lx',JSON.stringify(k<0?{y:0}:{k,o:Math.round(L[k].getBoundingClientRect().top)}));if(h){sessionStorage.setItem('lxHash',h);h=''}}catch(err){}location.href=u.pathname+u.search+h});}
 
 function el(tag, attrs, html){const e=document.createElement(tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(html!=null)e.innerHTML=html;return e;}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
@@ -851,10 +849,6 @@ gal.addEventListener('close',()=>{if(lbClose)lbClose(true)});
 /* 時間碼＝入行年資：時＝年、分＝月（自 2017 年 7 月起自動計算） */
 (function(){const now=new Date();const total=(now.getFullYear()-2017)*12+now.getMonth()-6;const t=document.getElementById('tcYears');if(t&&total>0){const y=Math.floor(total/12),m=total%12;const p=n=>String(n).padStart(2,'0');t.textContent=`${p(y)}:${p(m)}:00:00`;t.title=T(m?`入行 ${y} 年 ${m} 個月`:`入行 ${y} 年`,`${y} years${m?` ${m} months`:''} in the field`);}})();
 
-/* 深淺色切換（預設淺色） */
-const root=document.documentElement, btn=document.getElementById('themeBtn');
-function setTheme(t,keep=true){root.setAttribute('data-theme',t);btn.textContent=t==='light'?T('深色','Dark'):T('淺色','Light');btn.setAttribute('aria-label',t==='light'?T('切換深色模式','Switch to dark mode'):T('切換淺色模式','Switch to light mode'));if(keep)try{localStorage.setItem(LANG==='en'?'kk-theme-en':'kk-theme',t)}catch(e){}}
-setTheme(root.getAttribute('data-theme')==='dark'?'dark':'light',false);
 /* 預覽短片：連結網址 → MP4 路徑。有短片的作品優先播短片，其次 YouTube 嵌入，都沒有則維持推鏡。 */
 const VP_CLIPS={};
 const VP_LIVE=matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)').matches,VP_EMBED_BAR=20,VP_MIN_HOLD=500,VP_NO_EMBED=new Set();
@@ -985,61 +979,10 @@ tabLinks.forEach(a=>a.addEventListener('click',e=>{
 }));
 addEventListener('popstate',()=>tabFromUrl(true));addEventListener('hashchange',()=>tabFromUrl(true));
 tabFromUrl(false);
-if(tabIds.includes(location.hash.slice(1)))addEventListener('load',()=>requestAnimationFrame(()=>document.getElementById('works').scrollIntoView({behavior:'instant'})));
-let baBusy=false;
-function compareTheme(cur,next){
-  baBusy=true;
-  const SWEEP=800;
-  let mode='intro',t0=0,raf=0,p=100,from=100,to=0,settled=false;
-  const put=v=>{p=Math.min(100,Math.max(0,v));root.style.setProperty('--ba-p',p+'%')};
-  const ease=x=>1-Math.pow(1-x,3);
-  const sweep=x=>.5+4*Math.pow(x-.5,3);
-  put(100);
-  const tr=document.startViewTransition(()=>{root.classList.add('ba-on');setTheme(next)});
-  const settle=target=>{if(settled)return;settled=true;mode='settle';from=p;to=target;t0=performance.now()};
-  const finish=()=>{if(to===100)setTheme(cur);tr.skipTransition()};
-  const tick=now=>{
-    if(!t0)t0=now;
-    const dt=now-t0;
-    if(mode==='intro'){const k=Math.min(1,dt/SWEEP);put(100-100*sweep(k));if(k===1){settled=true;to=0;finish();return}}
-    else if(mode==='settle'){const k=Math.min(1,dt/450);put(from+(to-from)*ease(k));if(k===1){finish();return}}
-    raf=requestAnimationFrame(tick);
-  };
-  const xp=e=>e.clientX/innerWidth*100;
-  const down=e=>{
-    if(settled)return;
-    if(Math.abs(e.clientX-p/100*innerWidth)>44){settle(0);return}
-    mode='drag';put(xp(e));
-    try{root.setPointerCapture(e.pointerId)}catch(err){}
-  };
-  const move=e=>{if(mode==='drag')put(xp(e))};
-  const up=()=>{if(mode==='drag')settle(p<50?0:100)};
-  const wheel=()=>settle(0);
-  const key=e=>{
-    if(e.key==='Escape')settle(100);
-    else if(e.key==='Enter')settle(0);
-    else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){if(!settled){mode='keys';put(p+(e.key==='ArrowLeft'?-5:5))}}
-    else return;
-    e.preventDefault();
-  };
-  addEventListener('pointerdown',down,true);addEventListener('pointermove',move,true);
-  addEventListener('pointerup',up,true);addEventListener('pointercancel',up,true);
-  addEventListener('wheel',wheel,{capture:true,passive:true});addEventListener('keydown',key,true);
-  tr.ready.then(()=>{raf=requestAnimationFrame(tick)}).catch(()=>{});
-  tr.finished.catch(()=>{}).then(()=>{
-    cancelAnimationFrame(raf);
-    removeEventListener('pointerdown',down,true);removeEventListener('pointermove',move,true);
-    removeEventListener('pointerup',up,true);removeEventListener('pointercancel',up,true);
-    removeEventListener('wheel',wheel,true);removeEventListener('keydown',key,true);
-    root.classList.remove('ba-on');root.style.removeProperty('--ba-p');baBusy=false;
-  });
-}
-btn.addEventListener('click',()=>{
-  if(baBusy)return;
-  const cur=root.getAttribute('data-theme'),next=cur==='light'?'dark':'light';
-  if(!document.startViewTransition||matchMedia('(prefers-reduced-motion:reduce)').matches){setTheme(next);return}
-  compareTheme(cur,next);
-});
+{let h=null;try{h=sessionStorage.getItem('lxHash');sessionStorage.removeItem('lxHash')}catch(e){}if(h&&!location.hash&&tabIds.includes(h.slice(1))){showTab(h.slice(1),false);addEventListener('load',()=>setTimeout(()=>{if(!location.hash)history.replaceState(null,'',location.pathname+location.search+h)},0))}}
+let lxPending=false;try{const a=sessionStorage.getItem('lx');lxPending=a!==null;if(lxPending){window.__lxAlign=a;const o=JSON.parse(a),L=[...document.querySelectorAll(window.LX_MARKS)].filter(x=>x.offsetParent);document.documentElement.style.scrollBehavior='auto';scrollTo(0,o.k!==undefined&&L[o.k]?L[o.k].getBoundingClientRect().top+scrollY-o.o:(o.y||0));document.documentElement.style.scrollBehavior=''}}catch(e){}
+if(tabIds.includes(location.hash.slice(1))&&!lxPending)addEventListener('load',()=>requestAnimationFrame(()=>document.getElementById('works').scrollIntoView({behavior:'instant'})));
 </script>
+<i id="lx-end" hidden></i>
 </body>
 </html>
